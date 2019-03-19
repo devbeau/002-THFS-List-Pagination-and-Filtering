@@ -17,8 +17,23 @@ FSJS project 2 - List Filter and Pagination
    scoped to that function.
 ***/
 
+// Places student LI HTML objects into the array arrayStudents.
+
+const listStudents = document.querySelector(".student-list");
+const arrayStudents = listStudents.children;
+console.log(arrayStudents);
 
 
+//displays only first 10 students in array.
+for (i = 0; i < arrayStudents.length; i += 1){
+   thisStudent = arrayStudents[i];
+   
+   if (i < 10) {
+      thisStudent.style.display='';
+   } else {
+      thisStudent.style.display='none';
+   }
+};
 
 /*** 
    Create the `showPage` function to hide all of the items in the 
