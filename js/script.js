@@ -21,8 +21,10 @@ FSJS project 2 - List Filter and Pagination
 
 const listStudents = document.querySelector(".student-list");
 const arrayStudents = listStudents.children;
-console.log(arrayStudents);
+document.addEventListener('DOMContentLoaded', () => {
+getPages(arrayStudents);
 
+});
 /* 
 
   We should start with the pagination function,
@@ -31,25 +33,30 @@ of each list element as an argument for the function
 that determines the display element and hide the
 li elements that are out of bounds for this last function.
 */
+for (i=0; i < arrayStudents.length; i +=1){
+  thisStudent = arrayStudents[i];
+  if (i < 10) {
+        thisStudent.style.display='';} else {
+        thisStudent.style.display='none';
+     }
+};
+
 
 // need to create a elements within li within ul, so that an event listener can properly be attached to each  a element.
 
-
+// Loops over the
 function displayStudents(e){
-
-const pageIndex = toInt(e.target.innerHTML);
-for (i = 0; i < arrayStudents.length; i += 1){
-   thisStudent = arrayStudents[i];
-   
-   if (i >= pageindex * 10) {
-    if (i < pageindex * 10 + 10)
-      thisStudent.style.display='';
-   } else {
-      thisStudent.style.display='none';
-   }
-}};
-
-console.log(getPages(arrayStudents));
+  const pageIndex = parseInt(e.target.innerHTML) - 1;
+  for (i = 0; i < arrayStudents.length; i += 1){
+     thisStudent = arrayStudents[i];
+     
+     if (i >= pageIndex * 10 && i < pageIndex * 10 + 10) {
+        thisStudent.style.display='';} else {
+        thisStudent.style.display='none';
+     }
+  }
+  e.target.className = '.active';
+};
 
 function createA(){
   const newLi = document.createElement('li');
@@ -58,13 +65,16 @@ function createA(){
   newPage.innerHTML = i+1;
   newPage.setAttribute('href','#');
   spanSpacer.innerHTML = ' ';
+  newLi.addEventListener('click', (e) => {
+    displayStudents(e); 
+  });
   document.querySelector('ul.pagination').appendChild(newLi)
     .appendChild(newPage);
   
 };
 
 function getPages(listItems){
-const numPages = listItems.length % 10 + 1;
+const numPages = Math.floor(listItems.length / 10);
 const pageDiv = document.querySelector('div.page');
 const newDiv = document.createElement('div');
 const newUL = document.createElement('ul');
