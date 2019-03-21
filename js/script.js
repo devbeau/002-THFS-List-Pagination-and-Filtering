@@ -5,58 +5,55 @@ FSJS project 2 - List Filter and Pagination
    
 // Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
-
-/*** 
-   Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-   
-   But be mindful of which variables should be global and which 
-   should be locally scoped to one of the two main functions you're 
-   going to create. A good general rule of thumb is if the variable 
-   will only be used inside of a function, then it can be locally 
-   scoped to that function.
-***/
-
-// Places student LI HTML objects into the array arrayStudents.
+// Global variables that places student LI HTML objects into the array arrayStudents.
 
 const listStudents = document.querySelector(".student-list");
 const arrayStudents = listStudents.children;
+
+
+// Calls the functions that create the pagination, and set the initial display settings
+// for the array of student LI elements.
+
 document.addEventListener('DOMContentLoaded', () => {
-getPages(arrayStudents);
-
+  displayStudentsInit(arrayStudents);
+  getPages(arrayStudents);
 });
-/* 
 
-  We should start with the pagination function,
-and then use an event handler to take the integerization of the innerHTML
-of each list element as an argument for the function
-that determines the display element and hide the
-li elements that are out of bounds for this last function.
-*/
-for (i=0; i < arrayStudents.length; i +=1){
-  thisStudent = arrayStudents[i];
-  if (i < 10) {
-        thisStudent.style.display='';} else {
-        thisStudent.style.display='none';
-     }
-};
+// Sets the initial display property for the page
 
-
-// need to create a elements within li within ul, so that an event listener can properly be attached to each  a element.
-
-// Loops over the
-function displayStudents(e){
-  const pageIndex = parseInt(e.target.innerHTML) - 1;
-  for (i = 0; i < arrayStudents.length; i += 1){
-     thisStudent = arrayStudents[i];
-     
-     if (i >= pageIndex * 10 && i < pageIndex * 10 + 10) {
-        thisStudent.style.display='';} else {
-        thisStudent.style.display='none';
-     }
+function displayStudentsInit(arrayStudents){
+  for (i=0; i < arrayStudents.length; i +=1){
+    thisStudent = arrayStudents[i];
+    if (i < 10) {
+          thisStudent.style.display='';} else {
+          thisStudent.style.display='none';   
+        }
   }
-  e.target.className = '.active';
 };
+
+ // Creates the HTML elements for pagination at the bottom of the page
+
+function getPages(listItems){
+  const numPages = Math.floor(listItems.length / 10);
+  const pageDiv = document.querySelector('div.page');
+  const newDiv = document.createElement('div');
+  const newUL = document.createElement('ul');
+  newDiv.className = 'pagination';
+  newUL.className = 'pagination';
+  pageDiv.appendChild(newDiv);
+  newDiv.appendChild(newUL);
+
+  for (i = 0; i <= numPages; i+=1){
+    createA();
+    
+  }
+  // included a return for debugging
+  return newUL.children;
+};
+
+/* Creates an anchor element within a LI element. Then alters the display
+ property of the element based on its index within the students array
+ and the selected page number. */
 
 function createA(){
   const newLi = document.createElement('li');
@@ -73,26 +70,21 @@ function createA(){
   
 };
 
-function getPages(listItems){
-const numPages = Math.floor(listItems.length / 10);
-const pageDiv = document.querySelector('div.page');
-const newDiv = document.createElement('div');
-const newUL = document.createElement('ul');
-newDiv.className = 'pagination';
-newUL.className = 'pagination';
-pageDiv.appendChild(newDiv);
-newDiv.appendChild(newUL);
+/* Loops over the student array and sets the display property of the elements
+ based on whether they belong on a certain page */
 
-for (i = 0; i <= numPages; i+=1){
-  createA();
-  
-}
-
-return newUL.children;
+function displayStudents(e){
+  const pageIndex = parseInt(e.target.innerHTML) - 1;
+  for (i = 0; i < arrayStudents.length; i += 1){
+     thisStudent = arrayStudents[i];
+     
+     if (i >= pageIndex * 10 && i < pageIndex * 10 + 10) {
+        thisStudent.style.display='';} else {
+        thisStudent.style.display='none';
+     }
+  }
+  e.target.className = '.active';
 };
-
-
-
 /*** 
    Create the `showPage` function to hide all of the items in the 
    list except for the ten you want to show.
