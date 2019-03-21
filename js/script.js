@@ -23,17 +23,65 @@ const listStudents = document.querySelector(".student-list");
 const arrayStudents = listStudents.children;
 console.log(arrayStudents);
 
+/* 
 
-//displays only first 10 students in array.
+  We should start with the pagination function,
+and then use an event handler to take the integerization of the innerHTML
+of each list element as an argument for the function
+that determines the display element and hide the
+li elements that are out of bounds for this last function.
+*/
+
+// need to create a elements within li within ul, so that an event listener can properly be attached to each  a element.
+
+
+function displayStudents(e){
+
+const pageIndex = toInt(e.target.innerHTML);
 for (i = 0; i < arrayStudents.length; i += 1){
    thisStudent = arrayStudents[i];
    
-   if (i < 10) {
+   if (i >= pageindex * 10) {
+    if (i < pageindex * 10 + 10)
       thisStudent.style.display='';
    } else {
       thisStudent.style.display='none';
    }
+}};
+
+console.log(getPages(arrayStudents));
+
+function createA(){
+  const newLi = document.createElement('li');
+  const newPage = document.createElement('a');
+  const spanSpacer = document.createElement('span');
+  newPage.innerHTML = i+1;
+  newPage.setAttribute('href','#');
+  spanSpacer.innerHTML = ' ';
+  document.querySelector('ul.pagination').appendChild(newLi)
+    .appendChild(newPage);
+  
 };
+
+function getPages(listItems){
+const numPages = listItems.length % 10 + 1;
+const pageDiv = document.querySelector('div.page');
+const newDiv = document.createElement('div');
+const newUL = document.createElement('ul');
+newDiv.className = 'pagination';
+newUL.className = 'pagination';
+pageDiv.appendChild(newDiv);
+newDiv.appendChild(newUL);
+
+for (i = 0; i <= numPages; i+=1){
+  createA();
+  
+}
+
+return newUL.children;
+};
+
+
 
 /*** 
    Create the `showPage` function to hide all of the items in the 
