@@ -20,11 +20,36 @@ FSJS project 2 - List Filter and Pagination
 // Places student LI HTML objects into the array arrayStudents.
 
 const listStudents = document.querySelector(".student-list");
-const arrayStudents = listStudents.children;
-document.addEventListener('DOMContentLoaded', () => {
-getPages(arrayStudents);
+let arrayStudents = listStudents.children;
+const listStudentNames = document.querySelectorAll ('h3');
 
-});
+let resultsList = [];
+
+getPages(arrayStudents);
+initPage(arrayStudents);
+createButton();
+const searchForm = document.querySelector('form');
+searchStudentNames();
+
+function searchStudentNames(){
+  
+  searchForm.addEventListener('submit', (e) => {
+   e.preventDefault();
+   resultsList = [];
+   let compareStudentNames = document.querySelector('input.searchbox').value.toUpperCase();
+   console.log (compareStudentNames);
+    for (i = 0; i < listStudentNames.length; i += 1){
+      if (listStudentNames[i].textContent.toUpperCase().startsWith(compareStudentNames)){
+        resultsList.push(arrayStudents[i]);
+      }
+  }
+  clearPage(arrayStudents);
+  getPages(resultsList);
+  initPage(resultsList);
+  });
+  return resultsList;
+
+}
 /* 
 
   We should start with the pagination function,
@@ -33,22 +58,32 @@ of each list element as an argument for the function
 that determines the display element and hide the
 li elements that are out of bounds for this last function.
 */
-for (i=0; i < arrayStudents.length; i +=1){
-  thisStudent = arrayStudents[i];
+
+function clearPage (elementList){ 
+  for (i=0; i < elementList.length; i +=1){
+    const thisStudent = elementList[i];
+      thisStudent.style.display='none';
+      }
+    }
+  
+
+function initPage(elementList){
+for (i=0; i < elementList.length; i +=1){
+  thisStudent = elementList[i];
   if (i < 10) {
         thisStudent.style.display='';} else {
         thisStudent.style.display='none';
      }
 };
-
+}
 
 // need to create a elements within li within ul, so that an event listener can properly be attached to each  a element.
 
 // Loops over the
-function displayStudents(e){
-  const pageIndex = parseInt(e.target.innerHTML) - 1;
-  for (i = 0; i < arrayStudents.length; i += 1){
-     thisStudent = arrayStudents[i];
+function displayStudents(e, elementList){
+  const pageIndex = parseInt(e.target.textContent) - 1;
+  for (i = 0; i < elementList.length; i += 1){
+     thisStudent = elementList[i];
      
      if (i >= pageIndex * 10 && i < pageIndex * 10 + 10) {
         thisStudent.style.display='';} else {
@@ -58,7 +93,7 @@ function displayStudents(e){
   e.target.className = '.active';
 };
 
-function createA(){
+function createA(elementList){
   const newLi = document.createElement('li');
   const newPage = document.createElement('a');
   const spanSpacer = document.createElement('span');
@@ -66,25 +101,26 @@ function createA(){
   newPage.setAttribute('href','#');
   spanSpacer.innerHTML = ' ';
   newLi.addEventListener('click', (e) => {
-    displayStudents(e); 
+    displayStudents(e, elementList); 
   });
   document.querySelector('ul.pagination').appendChild(newLi)
     .appendChild(newPage);
   
 };
 
-function getPages(listItems){
-const numPages = Math.floor(listItems.length / 10);
+function getPages(elementList){
+const numPages = Math.floor(elementList.length / 10);
 const pageDiv = document.querySelector('div.page');
 const newDiv = document.createElement('div');
 const newUL = document.createElement('ul');
+removeChild();
 newDiv.className = 'pagination';
 newUL.className = 'pagination';
 pageDiv.appendChild(newDiv);
 newDiv.appendChild(newUL);
 
 for (i = 0; i <= numPages; i+=1){
-  createA();
+  createA(elementList);
   
 }
 
@@ -92,7 +128,29 @@ return newUL.children;
 };
 
 
+function createButton (){
+  const newButton = document.createElement('input');
+  const newInput = document.createElement('input');
+  const newForm = document.createElement('form');
+  const pageHeader = document.querySelector("div .page-header");
+  newButton.type = "submit";
+  newButton.textContent = "search";
+  newInput.type = "text";
+  newInput.className = 'searchbox';
+  newForm.style.float = 'right';
+  newForm.style.className = 'searchForm';
+  pageHeader.appendChild(newForm);
+  newForm.appendChild(newInput);
+  newForm.appendChild(newButton);
+}
 
+function removeChild (){
+  if(document.querySelector('div.pagination')){
+  var parEl = document.querySelector("div.page");
+  var childEl = document.querySelector('div.pagination');
+      parEl.removeChild(childEl);
+    }
+}
 /*** 
    Create the `showPage` function to hide all of the items in the 
    list except for the ten you want to show.
