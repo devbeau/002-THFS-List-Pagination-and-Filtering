@@ -9,7 +9,13 @@ FSJS project 2 - List Filter and Pagination
 
 const listStudents = document.querySelector(".student-list");
 const arrayStudents = listStudents.children;
+let arrayNames = arrayStudents.children.children[2];
 
+/*
+for (i=0; i < arrayStudents.length;i += 1){
+  let arrayNames = arrayStudents[i].childNodes
+
+}*/
 
 // Calls the functions that create the pagination, and set the initial display settings
 // for the array of student LI elements.
@@ -17,6 +23,7 @@ const arrayStudents = listStudents.children;
 document.addEventListener('DOMContentLoaded', () => {
   displayStudentsInit(arrayStudents);
   getPages(arrayStudents);
+  createSearch();
 });
 
 // Sets the initial display property for the page
@@ -85,6 +92,28 @@ function displayStudents(e){
   }
   e.target.className = '.active';
 };
+
+function createSearch () {
+  const header = document.querySelector('.page-header');
+  
+  const searchBar = document.createElement('input');
+  const searchButton = document.createElement('button');
+ 
+  searchButton.textContent = 'Search Students';
+  searchButton.className = 'student-search';
+  searchBar.type = 'text';
+  searchBar.className = 'student-search';
+  
+
+  
+  header.appendChild(searchButton);
+  header.appendChild(searchBar);
+}
+/*
+const SearchButton = document.querySelector('button.student-search');
+SearchButton.addEventListener('submit', (document.querySelector('input.student-search').value) => {
+
+});*/
 /*** 
    Create the `showPage` function to hide all of the items in the 
    list except for the ten you want to show.
